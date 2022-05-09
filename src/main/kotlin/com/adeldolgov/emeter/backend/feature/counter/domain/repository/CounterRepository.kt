@@ -14,5 +14,5 @@ interface CounterRepository {
 
     suspend fun getCountersForUser(userId: String, millis: Long): SuccessResponse<List<Counter>>
 
-    suspend fun getCounterScoresForInterval(counterId: String, from: Long, to: Long): SuccessResponse<List<CounterScore>>
+    suspend fun getCounterScoresForInterval(userId: String, counterId: String, from: Long, to: Long): SuccessResponse<List<CounterScore>>
 }

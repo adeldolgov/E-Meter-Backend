@@ -4,6 +4,7 @@ import com.adeldolgov.emeter.backend.di.repository.RepositoryProvider
 import com.adeldolgov.emeter.backend.feature.auth.domain.usecases.LoginUserUseCase
 import com.adeldolgov.emeter.backend.feature.auth.domain.usecases.RegisterUserUseCase
 import com.adeldolgov.emeter.backend.feature.counter.domain.usecases.CreateCounterUseCase
+import com.adeldolgov.emeter.backend.feature.counter.domain.usecases.GetCounterScoresForUserUseCase
 import com.adeldolgov.emeter.backend.feature.counter.domain.usecases.GetCountersForUserUseCase
 import com.adeldolgov.emeter.backend.feature.counter.domain.usecases.TickCounterUseCase
 import com.adeldolgov.emeter.backend.feature.user.domain.usecases.CurrentUserDetailUseCase
@@ -37,5 +38,9 @@ class DomainProviderImpl(private val repositoryProvider: RepositoryProvider) : D
 
     override fun provideTickCounterUseCase(): TickCounterUseCase {
         return DomainLocator.provideTickCounterUseCase(repositoryProvider.provideCounterRepository())
+    }
+
+    override fun provideGetCounterScoresForUserUseCase(): GetCounterScoresForUserUseCase {
+        return DomainLocator.provideGetCounterScoresForUserUseCase(repositoryProvider.provideCounterRepository())
     }
 }

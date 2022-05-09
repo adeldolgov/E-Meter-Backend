@@ -13,7 +13,6 @@ import com.adeldolgov.emeter.backend.feature.counter.domain.entities.CounterWith
 import com.adeldolgov.emeter.backend.feature.counter.domain.entities.CreateCounterRequest
 import com.adeldolgov.emeter.backend.feature.counter.domain.repository.CounterRepository
 import com.adeldolgov.emeter.backend.feature.scores.data.service.ScoreApiService
-import com.adeldolgov.emeter.backend.feature.scores.data.service.entities.ScoreApi
 import com.adeldolgov.emeter.backend.util.SuccessResponse
 import io.ktor.http.*
 import java.time.Instant
@@ -37,7 +36,7 @@ internal class CounterRepositoryImpl(
         return when {
             responseIsSuccessful -> SuccessResponse(
                 data = CounterWithToken(
-                    counter = counterApiToCounterMapper(counter, 0, emptyList()),
+                    counter = counterApiToCounterMapper(counter, 0, 0, emptyList()),
                     token = jwtConfig.makeAccessTokenForCounter(counter.id),
                 ),
                 code = HttpStatusCode.Created
@@ -65,7 +64,7 @@ internal class CounterRepositoryImpl(
             val currentDayScores = scoreApiService.getScoresForCounter(it.id, startOfDay.toInstant().toEpochMilli(), millis)
             val previousDayScores = scoreApiService.getScoresForCounter(it.id, startOfPreviousDay.toInstant().toEpochMilli(), startOfDay.toInstant().toEpochMilli() - 1)
             val monthScores = scoreApiService.getScoresForCounter(it.id, previousStatementDate.toInstant().toEpochMilli(), millis)
-            counterApiToCounterMapper(it, monthScores.size, /* previousDayScores.size */, currentDayScores)
+            counterApiToCounterMapper(it, monthScores.size, previousDayScores.size, currentDayScores)
         }.let { SuccessResponse(data = it, code = HttpStatusCode.Found) }
     }
 
@@ -80,8 +79,9 @@ internal class CounterRepositoryImpl(
         return LocalDate.of(localDateNow.year, localDateNow.month - 1, counter.nextStatementDayOfMonth).atStartOfDay(ZoneId.systemDefault())
     }
 
-    override suspend fun getCounterScoresForInterval(counterId: String, from: Long, to: Long): SuccessResponse<List<CounterScore>> {
+    override suspend fun getCounterScoresForInterval(userId: String, counterId: String, from: Long, to: Long): SuccessResponse<List<CounterScore>> {
         val counter: CounterApi = counterApiService.findCounterById(counterId) ?: throw exceptionHandler.respondWithNotFoundException(COUNTER_NOT_FOUND)
+        if (counter.userId != userId) throw exceptionHandler.respondWithNotFoundException(COUNTER_NOT_FOUND)
         return SuccessResponse(
             data = scoreApiService.getScoresForCounter(counter.id, from, to).let(scoreApiToCounterScoreMapper),
             code = HttpStatusCode.Found

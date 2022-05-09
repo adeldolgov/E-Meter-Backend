@@ -7,10 +7,11 @@ import com.adeldolgov.emeter.backend.feature.counter.domain.entities.CounterType
 import com.adeldolgov.emeter.backend.feature.scores.data.service.entities.ScoreApi
 import java.math.BigDecimal
 
-internal class CounterApiToCounterMapper : (CounterApi, Int, List<ScoreApi>) -> Counter {
+internal class CounterApiToCounterMapper : (CounterApi, Int, Int, List<ScoreApi>) -> Counter {
 
     override fun invoke(
         counterApi: CounterApi,
+        monthScoresCount: Int,
         previousDayScoresCount: Int,
         currentDayScores: List<ScoreApi>
     ): Counter {

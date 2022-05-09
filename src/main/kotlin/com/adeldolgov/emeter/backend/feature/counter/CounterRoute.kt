@@ -5,6 +5,7 @@ import com.adeldolgov.emeter.backend.base.auth.CounterIdPrincipalForCounter
 import com.adeldolgov.emeter.backend.base.auth.UserIdPrincipalForUser
 import com.adeldolgov.emeter.backend.di.domain.DomainProvider
 import com.adeldolgov.emeter.backend.feature.counter.domain.entities.Counter
+import com.adeldolgov.emeter.backend.feature.counter.domain.entities.CounterScore
 import com.adeldolgov.emeter.backend.feature.counter.domain.entities.CounterWithToken
 import com.adeldolgov.emeter.backend.feature.counter.domain.entities.CreateCounterRequest
 import com.adeldolgov.emeter.backend.util.SuccessResponse
@@ -30,6 +31,14 @@ fun Application.counterRoutes(domainProvider: DomainProvider) {
                 val principal = call.authentication.principal<UserIdPrincipalForUser>()!!
                 val response = domainProvider.provideGetCountersForUserUseCase().invoke(principal.userId, call.request.queryParameters["millis"]?.toLong() ?: 0)
                 call.respond<SuccessResponse<List<Counter>>>(response as SuccessResponse<List<Counter>>)
+            }
+            get<GetCounterScoresForUser> {
+                val principal = call.authentication.principal<UserIdPrincipalForUser>()!!
+                val counterId = call.request.queryParameters["counterId"].orEmpty()
+                val from = call.request.queryParameters["from"]?.toLong() ?: 0
+                val to = call.request.queryParameters["to"]?.toLong() ?: 0
+                val response = domainProvider.provideGetCounterScoresForUserUseCase().invoke(principal.userId, counterId, from, to)
+                call.respond<SuccessResponse<List<CounterScore>>>(response as SuccessResponse<List<CounterScore>>)
             }
         }
         authenticate(AUTH_NAME_COUNTER) {

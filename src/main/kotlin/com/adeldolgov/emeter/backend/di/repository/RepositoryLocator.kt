@@ -8,6 +8,7 @@ import com.adeldolgov.emeter.backend.feature.auth.domain.repository.AuthReposito
 import com.adeldolgov.emeter.backend.feature.counter.data.CounterRepositoryImpl
 import com.adeldolgov.emeter.backend.feature.counter.data.mappers.CounterApiToCounterMapper
 import com.adeldolgov.emeter.backend.feature.counter.data.mappers.CreateCounterRequestToCounterApiMapper
+import com.adeldolgov.emeter.backend.feature.counter.data.mappers.ScoreApiToCounterScoreMapper
 import com.adeldolgov.emeter.backend.feature.counter.data.service.CounterApiService
 import com.adeldolgov.emeter.backend.feature.counter.domain.repository.CounterRepository
 import com.adeldolgov.emeter.backend.feature.scores.data.service.ScoreApiService
@@ -40,6 +41,7 @@ object RepositoryLocator {
             scoreApiService,
             CreateCounterRequestToCounterApiMapper(),
             CounterApiToCounterMapper(),
+            ScoreApiToCounterScoreMapper(),
             JwtConfig.instance,
             ConfigLocator.provideExceptionHandler(),
         )

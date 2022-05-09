@@ -13,3 +13,7 @@ class GetCountersForUser
 @KtorExperimentalLocationsAPI
 @Location(CounterConstant.TICK_COUNTER)
 class TickCounter
+
+@KtorExperimentalLocationsAPI
+@Location(CounterConstant.GET_COUNTER_SCORES_FOR_USER)
+class GetCounterScoresForUser

@@ -44,6 +44,10 @@ object DomainLocator {
         return TickCounterUseCaseImpl(counterRepository)
     }
 
+    fun provideGetCounterScoresForUserUseCase(counterRepository: CounterRepository): GetCounterScoresForUserUseCase {
+        return GetCounterScoresForUserUseCaseImpl(counterRepository)
+    }
+
     fun provideDomainProvider(): DomainProvider {
         return DomainProviderImpl(RepositoryLocator.provideRepositoryProvider())
     }
