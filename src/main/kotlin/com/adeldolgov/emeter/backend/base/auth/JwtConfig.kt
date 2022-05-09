@@ -4,11 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 
-/**
- * Simple implementation for providing JWT Authentication mechanism.
- * Use [makeAccessToken] method to generate token.
- */
-open class JwtConfig private constructor(secret: String) {
+class JwtConfig private constructor(secret: String) {
 
     private val algorithm = Algorithm.HMAC256(secret)
 
@@ -18,17 +14,22 @@ open class JwtConfig private constructor(secret: String) {
         .withAudience(AUDIENCE)
         .build()
 
-    /**
-     * Generates JWT token from [userId].
-     */
-    fun makeAccessToken(userId: String): String = JWT
+    fun makeAccessTokenForUser(userId: String): String = JWT
         .create()
         .withIssuer(ISSUER)
         .withAudience(AUDIENCE)
-        .withClaim(ClAIM, userId)
+        .withClaim(ClAIM_USER_ID, userId)
+        .sign(algorithm)
+
+    fun makeAccessTokenForCounter(counterId: String): String = JWT
+        .create()
+        .withIssuer(ISSUER)
+        .withAudience(AUDIENCE)
+        .withClaim(ClAIM_COUNTER_ID, counterId)
         .sign(algorithm)
 
     companion object {
+
         lateinit var instance: JwtConfig
             private set
 
@@ -40,8 +41,9 @@ open class JwtConfig private constructor(secret: String) {
             }
         }
 
-        private const val ISSUER = "ktor-backend"
-        private const val AUDIENCE = "ktor-backend"
-        const val ClAIM = "userId"
+        private const val ISSUER = "emeter-backend-issuer"
+        private const val AUDIENCE = "emeter-backend-audience"
+        const val ClAIM_USER_ID = "userId"
+        const val ClAIM_COUNTER_ID = "counterId"
     }
 }

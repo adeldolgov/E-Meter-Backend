@@ -23,8 +23,8 @@ data class UserApi(
     @SerialName("lastname")
     val lastname: String? = null,
 
-    @SerialName("createdAt")
-    val createdAt: String? = null,
+    @SerialName("createdAtMillis")
+    val createdAt: Long,
 
     @SerialName("updatedAt")
     val updatedAt: String? = null,

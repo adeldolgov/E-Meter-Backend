@@ -21,5 +21,5 @@ data class ScoreApi(
     val counterValue: @Contextual BigDecimal,
 
     @SerialName("createdAtMillis")
-    val createdAtMillis: Long = Date().toInstant().epochSecond
+    val createdAtMillis: Long = Date().toInstant().toEpochMilli()
 )

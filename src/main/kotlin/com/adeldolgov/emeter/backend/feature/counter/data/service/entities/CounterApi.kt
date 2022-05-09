@@ -28,6 +28,9 @@ class CounterApi(
     @SerialName("price")
     val pricePerUnit: @Contextual BigDecimal,
 
+    @SerialName("nextStatementDayOfMonth")
+    val nextStatementDayOfMonth: Int,
+
     @SerialName("type")
     val type: CounterTypeApi,
 )

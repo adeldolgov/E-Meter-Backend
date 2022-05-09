@@ -5,7 +5,7 @@ import java.math.BigDecimal
 
 interface ScoreApiService {
 
-    suspend fun tickCounter(counterId: String, valuePerTick: BigDecimal): Boolean
+    suspend fun tickCounter(counterId: String, valuePerTick: BigDecimal, initialValue: BigDecimal): Boolean
 
     suspend fun getScoresForCounter(counterId: String, from: Long, to: Long): List<ScoreApi>
 }

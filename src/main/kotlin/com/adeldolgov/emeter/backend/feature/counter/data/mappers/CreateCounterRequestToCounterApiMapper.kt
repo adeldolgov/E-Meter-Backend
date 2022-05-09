@@ -14,6 +14,7 @@ internal class CreateCounterRequestToCounterApiMapper : (String, CreateCounterRe
             initialValue = createCounterRequest.initialValue,
             valuePerTick = createCounterRequest.valuePerTick,
             pricePerUnit = createCounterRequest.pricePerUnit,
+            nextStatementDayOfMonth = createCounterRequest.nextStatementDayOfMonth,
             type = extractCounterTypeApiFromCounterType(createCounterRequest.counterType)
         )
     }

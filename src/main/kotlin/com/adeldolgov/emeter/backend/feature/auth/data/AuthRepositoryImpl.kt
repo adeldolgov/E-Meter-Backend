@@ -4,12 +4,13 @@ import com.adeldolgov.emeter.backend.base.auth.JwtConfig
 import com.adeldolgov.emeter.backend.base.http.ExceptionHandler
 import com.adeldolgov.emeter.backend.feature.auth.domain.entities.AuthRequest
 import com.adeldolgov.emeter.backend.feature.auth.domain.repository.AuthRepository
-import com.adeldolgov.emeter.backend.feature.user.data.service.entities.UserApi
 import com.adeldolgov.emeter.backend.feature.user.data.service.UserApiService
+import com.adeldolgov.emeter.backend.feature.user.data.service.entities.UserApi
 import com.adeldolgov.emeter.backend.util.SuccessResponse
 import com.adeldolgov.emeter.backend.util.checkHashForPassword
 import com.adeldolgov.emeter.backend.util.getHashWithSalt
 import io.ktor.http.*
+import java.util.*
 
 internal class AuthRepositoryImpl(
     private val userApiService: UserApiService,
@@ -22,10 +23,10 @@ internal class AuthRepositoryImpl(
             throw exceptionHandler.respondWithAlreadyExistException(USER_ALREADY_EXIST_MESSAGE)
         } else {
             val hashPassword = getHashWithSalt(authRequest.password)
-            val userApi = UserApi(authRequest.username, hashPassword)
+            val userApi = UserApi(username = authRequest.username, passwordHash = hashPassword, createdAt = Date().toInstant().toEpochMilli())
             val responseIsSuccessful = userApiService.insertUser(userApi)
             when {
-                responseIsSuccessful -> SuccessResponse(data = jwtConfig.makeAccessToken(userApi.id), code = HttpStatusCode.Created)
+                responseIsSuccessful -> SuccessResponse(data = jwtConfig.makeAccessTokenForUser(userApi.id), code = HttpStatusCode.Created)
                 else -> throw exceptionHandler.respondWithGenericException(SOMETHING_WENT_WRONG)
             }
         }
@@ -34,7 +35,7 @@ internal class AuthRepositoryImpl(
     override suspend fun loginUser(authRequest: AuthRequest): SuccessResponse<String> {
         val userApi = userApiService.findUserByUsername(authRequest.username)
         return if (userApi?.passwordHash?.let { checkHashForPassword(authRequest.password, it) } == true) {
-            SuccessResponse(data = jwtConfig.makeAccessToken(userApi.id), code = HttpStatusCode.OK)
+            SuccessResponse(data = jwtConfig.makeAccessTokenForUser(userApi.id), code = HttpStatusCode.OK)
         } else {
             throw exceptionHandler.respondWithUnauthorizedException(EITHER_USERNAME_PASSWORD_INCORRECT)
         }

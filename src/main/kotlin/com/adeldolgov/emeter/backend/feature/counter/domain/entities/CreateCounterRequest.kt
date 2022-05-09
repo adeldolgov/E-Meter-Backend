@@ -10,11 +10,14 @@ data class CreateCounterRequest(
     @SerialName("name")
     val name: String,
 
-    @SerialName("value")
+    @SerialName("initialValue")
     val initialValue: @Contextual BigDecimal,
 
     @SerialName("valuePerTick")
     val valuePerTick: @Contextual BigDecimal,
+
+    @SerialName("nextStatementDayOfMonth")
+    val nextStatementDayOfMonth: Int,
 
     @SerialName("price")
     val pricePerUnit: @Contextual BigDecimal,

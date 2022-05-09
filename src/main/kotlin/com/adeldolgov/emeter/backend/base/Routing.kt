@@ -3,6 +3,7 @@ package com.adeldolgov.emeter.backend.base
 import com.adeldolgov.emeter.backend.base.serializers.BigDecimalAsStringSerializer
 import com.adeldolgov.emeter.backend.di.domain.DomainLocator
 import com.adeldolgov.emeter.backend.feature.auth.authRoutes
+import com.adeldolgov.emeter.backend.feature.counter.counterRoutes
 import com.adeldolgov.emeter.backend.feature.user.userRoutes
 import io.ktor.application.*
 import io.ktor.features.*
@@ -34,5 +35,6 @@ fun Application.configureRoutingAndSerialization() {
     routing {
         userRoutes(domainLocator.provideDomainProvider())
         authRoutes(domainLocator.provideDomainProvider())
+        counterRoutes(domainLocator.provideDomainProvider())
     }
 }

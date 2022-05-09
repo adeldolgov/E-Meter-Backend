@@ -7,15 +7,21 @@ import com.adeldolgov.emeter.backend.feature.counter.domain.entities.CounterType
 import com.adeldolgov.emeter.backend.feature.scores.data.service.entities.ScoreApi
 import java.math.BigDecimal
 
-internal class CounterApiToCounterMapper : (CounterApi, List<ScoreApi>) -> Counter {
+internal class CounterApiToCounterMapper : (CounterApi, Int, List<ScoreApi>) -> Counter {
 
-    override fun invoke(counterApi: CounterApi, scores: List<ScoreApi>): Counter {
+    override fun invoke(
+        counterApi: CounterApi,
+        previousDayScoresCount: Int,
+        currentDayScores: List<ScoreApi>
+    ): Counter {
         return Counter(
             id = counterApi.id,
             name = counterApi.name,
-            value = scores.lastOrNull()?.counterValue ?: BigDecimal.ZERO,
-            price = BigDecimal.valueOf(scores.size.toDouble()) * counterApi.pricePerUnit,
-            valueDiff = scores.firstOrNull()?.counterValue?.minus(scores.lastOrNull()?.counterValue ?: BigDecimal.ZERO) ?: BigDecimal.ZERO,
+            value = BigDecimal.valueOf(monthScoresCount.toLong()) * counterApi.valuePerTick,
+            totalValue = currentDayScores.lastOrNull()?.counterValue ?: counterApi.initialValue,
+            price = BigDecimal.valueOf(monthScoresCount.toLong()) * counterApi.valuePerTick * counterApi.pricePerUnit,
+            valueDiff = BigDecimal.valueOf(currentDayScores.size.toLong()) * counterApi.valuePerTick -
+                    BigDecimal.valueOf(previousDayScoresCount.toLong()) * counterApi.valuePerTick,
             type = mapCounterTypeApiToCounterType(counterApi.type)
         )
     }

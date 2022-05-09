@@ -17,6 +17,9 @@ data class Counter(
     @SerialName("value")
     val value: @Contextual BigDecimal,
 
+    @SerialName("totalValue")
+    val totalValue: @Contextual BigDecimal,
+
     @SerialName("price")
     val price: @Contextual BigDecimal,
 
