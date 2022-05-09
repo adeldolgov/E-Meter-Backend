@@ -18,10 +18,11 @@ buildscript {
 plugins {
     application
     kotlin("jvm") version "1.5.10"
+    kotlin("plugin.serialization") version "1.5.10"
     id("org.jlleitschuh.gradle.ktlint")
 }
 
-group = "com.himanshoe"
+group = "com.adeldolgov.emeter.backend"
 version = "0.0.1"
 
 application {
@@ -34,12 +35,12 @@ repositories {
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktor_version")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-auth:$ktor_version")
     implementation("io.ktor:ktor-auth-jwt:$ktor_version")
     implementation("io.ktor:ktor-locations:$ktor_version")
     implementation("io.ktor:ktor-server-host-common:$ktor_version")
-    implementation("io.ktor:ktor-gson:$ktor_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-serialization:$ktor_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
     implementation("commons-codec:commons-codec:1.14")
     implementation("ch.qos.logback:logback-classic:$logback_version")
